@@ -1,4 +1,12 @@
 function [cases, res] = compareStartingPoles(filename)
+%COMPARESTARTINGPOLES Compares different starting poles
+% Function that compares different combinations of starting poles for
+% vector fitting. At the moment it is not customizable
+% Input:
+%   filename: Name of the file containing the data
+% Output:
+%   cases: struct containing information about the cases
+%   res: struc containing the results
 
 % First read in the data
 [f,p] = readPMU(filename);

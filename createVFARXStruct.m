@@ -1,4 +1,5 @@
 function caseStruct = createVFARXStruct(p, f, t, caseStruct, window, fraction)
+
 caseStruct.sys = iddata(p,f,t(2)-t(1));
 if nargin > 4 && ~isempty(window)
     p = smooth(p,window);
