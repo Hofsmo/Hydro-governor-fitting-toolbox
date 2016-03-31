@@ -30,22 +30,22 @@ if iscell(results)
     title (name)
     
     if toLaTeX
-        saveLaTeX ('Bode', name)
+        saveLaTeX ('Bode', name,figureSize)
     end
     
     compare(sys,results{:})
     legend(legends)
     
     if toLaTeX
-        saveLaTeX ('compare', name)
+        saveLaTeX ('compare', name,figureSize)
     end
     figure
     pzmap(results{:});
     title(name)
     legend(legends)
     
-    if toFile
-        saveLaTeX ('pzmap', name)
+    if toLaTeX
+        saveLaTeX ('pzmap', name,figureSize)
     end
     
     return
@@ -62,11 +62,14 @@ elseif isstruct(results)
     end
 else
     bode(results*50*320)
+    if toLaTeX
+        saveLaTeX ('Bode', name,figureSize)
+    end
     grid on
     compare(sys,results{:})
 end
 
-function saveLaTeX (string, name)
+function saveLaTeX (string, name,figureSize)
 % SAVELATEX get figure handle and save to latex
 % Private function to save LaTeX figures
 % INPUT:
