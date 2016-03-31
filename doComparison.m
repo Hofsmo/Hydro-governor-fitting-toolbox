@@ -1,4 +1,4 @@
-function doComparison(sys, results, name, legends, toLaTeX, figureWidth)
+function [fit, responses] = doComparison(sys, results, name, legends, toLaTeX, figureWidth)
 % DOCOMPARISON compares fitted models with measurements
 % doComparison compares different fitted models with measurements using the
 % compare function. It also plots the bode plot and a plot showing the
@@ -23,8 +23,7 @@ end
 if nargin < 4
     legends = 'show';
 end
-temp=cellfun(@(x) x, results,'UniformOutput', false);
-bode(temp{:})
+bode(results{:})
 legend(legends)
 grid on
 title (name)
@@ -33,13 +32,29 @@ if toLaTeX
     saveLaTeX ('Bode', name,figureWidth)
 end
 
-compare(sys,results{:})
-legend(legends)
+[y,fit] = compare(sys,results{:});
+responses = {iddata(sys.OutputData,[], sys.Ts) ,y{:}};
+
+temp = cell(1,numel(legends)+1);
+temp{1} = 'Measured response';
+for i = 1:numel(legends)
+    temp{i+1} = sprintf('%s \t \t %4.2f%%',legends{i},fit{i});
+end
+
+figure
+plot(responses{:})
+legend(temp)
+title (name)
 
 if toLaTeX
     saveLaTeX ('compare', name,figureWidth)
 end
 figure
+for i = 1:numel(results)
+    if isdt(results{i})
+        results{i} = d2c(results{i});
+    end
+end
 pzmap(results{:});
 title(name)
 legend(legends)

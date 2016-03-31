@@ -125,4 +125,4 @@ for i = 1:numel(names)
     cellRes{i} = res.(names{i}).fit;
 end
 
-doComparison(cases.complex1.td,cellRes);
+doComparison(cases.complex1.td,cellRes,[],names);

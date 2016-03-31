@@ -81,25 +81,6 @@ cases.halfRange = cases.decimate;
 cases.halfRange = createVFARXStruct(cases.decimate.p(n),cases.decimate.f(n),...
     cases.decimate.t(n),cases.halfRange);
 
-% Case generator 3
-[p1,f1,t,~] = prepareCase('150916-Kvilldal-T3-Normal.csv',1:2200*50);
-cases.T3.realPoles = -linspace(0,6,10);
-cases.T3.complexPoles = [];
-cases.T3 = createVFARXStruct(p1,f1,t,cases.T3,200,10);
-
-% Case generator 2
-[p1,f1,t,~] = prepareCase('150916-Kvilldal-T2-Normal.csv',1:2200*50);
-cases.T2.realPoles = -linspace(0,10);
-cases.T2.complexPoles = [];
-cases.T2 = createVFARXStruct(p1,f1,t,cases.T2,200,10);
-
-% Case generator 1
-[p1,f1,t,~] = prepareCase('150916-Kvilldal-G1-Normal.csv',1:2200*50);
-cases.T1 = cases.decimate;
-cases.T1.realPoles = -linspace(0,6,10);
-cases.T1.complexPoles = [];
-cases.T1 = createVFARXStruct(p1,f1,t,cases.T1,200,10);
-
 names = fieldnames (cases);
 
 % run the tests
@@ -110,5 +91,6 @@ for i = 1:numel(names)
         cases.(names{i}).realPoles);
     % Run ARX
     res.(names{i}).arx = runARX(cases.(names{i}).td);    
+    doComparison(cases.(names{i}).td,{res.(names{i}).vf.fit,res.(names{i}).arx.fit},...
+        names{i},{'VF','ARX'});
 end
-doComparison(cases,res)
