@@ -5,9 +5,10 @@ function doComparison(sys, results, name, legends, toLaTeX, figureWidth)
 % poles and zeros.
 % INPUT:
 %   sys: Input and output measurements stored in an iddata object
-%   results: Struct containing the fitted models
+%   results: Cell array containing the transfer functions of the fitted
+%   model
 %   name: Name of the model being fitted
-%   legends: Show legends
+%   legends: Array containing legend entries
 %   toLaTeX: If the plots should be saved as LaTeX figure
 %   figureWidth: The width of the figure. The default is 0.5\textwidth
 if nargin < 6
@@ -22,53 +23,31 @@ end
 if nargin < 4
     legends = 'show';
 end
-if iscell(results)
-    temp=cellfun(@(x) x, results,'UniformOutput', false);
-    bode(temp{:})
-    legend(legends)
-    grid on
-    title (name)
-    
-    if toLaTeX
-        saveLaTeX ('Bode', name,figureSize)
-    end
-    
-    compare(sys,results{:})
-    legend(legends)
-    
-    if toLaTeX
-        saveLaTeX ('compare', name,figureSize)
-    end
-    figure
-    pzmap(results{:});
-    title(name)
-    legend(legends)
-    
-    if toLaTeX
-        saveLaTeX ('pzmap', name,figureSize)
-    end
-    
-    return
-elseif isstruct(results)
-    names = fieldnames(results);
-    for i = 1:numel(names)
-        figure
-        temp = cell(1,2);
-        temp{1} = results.(names{i}).vf.fit;
-        temp{2} = results.(names{i}).arx.fit;
-        
-        temp{2} = d2c(temp{2});
-        doComparison(sys.(names{i}).sys,temp,names{i},{'VF','ARX'});
-    end
-else
-    bode(results)
-    if toLaTeX
-        saveLaTeX ('Bode', name,figureSize)
-    end
-    grid on
-    compare(sys,results{:})
+temp=cellfun(@(x) x, results,'UniformOutput', false);
+bode(temp{:})
+legend(legends)
+grid on
+title (name)
+
+if toLaTeX
+    saveLaTeX ('Bode', name,figureWidth)
 end
 
+compare(sys,results{:})
+legend(legends)
+
+if toLaTeX
+    saveLaTeX ('compare', name,figureWidth)
+end
+figure
+pzmap(results{:});
+title(name)
+legend(legends)
+
+if toLaTeX
+    saveLaTeX ('pzmap', name,figureWidth)
+end
+    
 function saveLaTeX (string, name,figureWidth)
 % SAVELATEX get figure handle and save to latex
 % Private function to save LaTeX figures
