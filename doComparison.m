@@ -1,4 +1,4 @@
-function doComparison(sys, results, name, legends, toLaTeX, figureSize)
+function doComparison(sys, results, name, legends, toLaTeX, figureWidth)
 % DOCOMPARISON compares fitted models with measurements
 % doComparison compares different fitted models with measurements using the
 % compare function. It also plots the bode plot and a plot showing the
@@ -9,9 +9,9 @@ function doComparison(sys, results, name, legends, toLaTeX, figureSize)
 %   name: Name of the model being fitted
 %   legends: Show legends
 %   toLaTeX: If the plots should be saved as LaTeX figure
-
+%   figureWidth: The width of the figure. The default is 0.5\textwidth
 if nargin < 6
-    figureSize = '0.5\textwidth';
+    figureWidth = '0.5\textwidth';
 end
 if nargin < 5
     toLaTeX = false;
@@ -69,11 +69,12 @@ else
     compare(sys,results{:})
 end
 
-function saveLaTeX (string, name,figureSize)
+function saveLaTeX (string, name,figureWidth)
 % SAVELATEX get figure handle and save to latex
 % Private function to save LaTeX figures
 % INPUT:
 %   string: String specifying what type of plot this is
 %   name: Name of the model
-h = gcf;
-matlab2tikz('figurehandle',h, 'filename', sprintf('%s_%s.tikz',name,string));
+%   figureWidth: The widht of the figure
+matlab2tikz('filename', sprintf('%s_%s.tikz',name,string),...
+    'width',figureWidth);
