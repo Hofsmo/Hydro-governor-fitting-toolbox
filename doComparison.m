@@ -1,6 +1,20 @@
-function doComparison(sys, results, name, legends, toFile)
+function doComparison(sys, results, name, legends, toLaTeX, figureSize)
+% DOCOMPARISON compares fitted models with measurements
+% doComparison compares different fitted models with measurements using the
+% compare function. It also plots the bode plot and a plot showing the
+% poles and zeros.
+% INPUT:
+%   sys: Input and output measurements stored in an iddata object
+%   results: Struct containing the fitted models
+%   name: Name of the model being fitted
+%   legends: Show legends
+%   toLaTeX: If the plots should be saved as LaTeX figure
+
+if nargin < 6
+    figureSize = '0.5\textwidth';
+end
 if nargin < 5
-    toFile = false;
+    toLaTeX = false;
 end
 if nargin < 3
     name ='';
@@ -15,15 +29,15 @@ if iscell(results)
     grid on
     title (name)
     
-    if toFile
-        print (name, '-jpeg')
+    if toLaTeX
+        saveLaTeX ('Bode', name)
     end
     
     compare(sys,results{:})
     legend(legends)
     
-    if toFile
-        print(name, '-jpeg')
+    if toLaTeX
+        saveLaTeX ('compare', name)
     end
     figure
     pzmap(results{:});
@@ -31,7 +45,7 @@ if iscell(results)
     legend(legends)
     
     if toFile
-        print(name, '-jpeg')
+        saveLaTeX ('pzmap', name)
     end
     
     return
@@ -51,3 +65,12 @@ else
     grid on
     compare(sys,results{:})
 end
+
+function saveLaTeX (string, name)
+% SAVELATEX get figure handle and save to latex
+% Private function to save LaTeX figures
+% INPUT:
+%   string: String specifying what type of plot this is
+%   name: Name of the model
+h = gcf;
+matlab2tikz('figurehandle',h, 'filename', sprintf('%s_%s.tikz',name,string));
