@@ -29,6 +29,12 @@ fclose(fid);
 
 data = dlmread (filename, delimiter, 1, 1);
 
+% Trunctate the data at the first nan value
+[row, ~] = find(isnan(data));
+if ~isempty(row)
+    data = data(1:row(1)-1,:);
+end
+
 f = data(:,idx(1));
 U = data(:,idx(2)).*(cos(data(:,idx(3))*pi/180) +1i*sin(data(:,idx(3))*pi/180));
 I = -data(:,idx(4)).*(cos(data(:,idx(5))*pi/180) +1i*sin(data(:,idx(5))*pi/180));
