@@ -1,4 +1,4 @@
-function [cases, res] = compareStartingPoles(filename)
+    function [cases, res] = compareStartingPoles(filename)
 %COMPARESTARTINGPOLES Compares different starting poles
 % Function that compares different combinations of starting poles for
 % vector fitting. At the moment it is not customizable
@@ -9,11 +9,7 @@ function [cases, res] = compareStartingPoles(filename)
 %   res: struc containing the results
 
 % First read in the data
-[f,p] = readPMU(filename);
-
-f1 = f(1:2200*50);
-p1 = p(1:2200*50);
-range = 1:numel(f1);
+[f1,p1] = readPMU(filename);
 
 % Remoce dc offset
 hDC3 = dsp.DCBlocker('Algorithm','Subtract mean');
@@ -32,12 +28,6 @@ Betha = -linspace(0,1,10);
 complexPoles = complex(Betha/100,Betha);
 cases.complex1.complexPoles = complexPoles;
 cases.complex1.realPoles = [];
-cases.complex1.sys = iddata(p1,f1,ts);
-cases.complex1.f = decimate(smooth(f1,200),10);
-cases.complex1.p = decimate(smooth(p1,200),10);
-cases.complex1.t = decimate(t,10);
-cases.complex1.td = iddata(p1,f1,ts);
-
 
 %% Case 2:Real1
 % In this case there is only real poles linearly spaced up to 10
@@ -111,11 +101,17 @@ cases.compReal5.realPoles = cases.real4.realPoles;
 
 names = fieldnames (cases);
 
+cases.f = decimate(smooth(f1,200),10);
+cases.p = decimate(smooth(p1,200),10);
+cases.t = decimate(t,10);
+ts = cases.t(2)-cases.t(1);
+cases.sys = iddata(cases.p,cases.f,ts);
+
 %run the tests
 for i = 1:numel(names)
     % Run vectorfitting
-    res.(names{i}) = runVecFit(cases.(names{i}).f, cases.(names{i}).p,...
-        cases.(names{i}).t, cases.(names{i}).complexPoles,...
+    res.(names{i}) = runVecFit(cases.f, cases.p,...
+        cases.t, cases.(names{i}).complexPoles,...
         cases.(names{i}).realPoles,1e-5);
 end
 
@@ -125,4 +121,4 @@ for i = 1:numel(names)
     cellRes{i} = res.(names{i}).fit;
 end
 
-doComparison(cases.complex1.td,cellRes,[],names);
+cases.fit = doComparison(cases.sys,cellRes,[],names);

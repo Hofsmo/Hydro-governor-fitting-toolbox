@@ -19,7 +19,7 @@ if nargin < 4
 end
 
 if nargin < 3
-    window = 0;
+    window = [];
 end
 
 if nargin < 2 || isempty(range)
@@ -39,9 +39,12 @@ ts = 0.02;
 t=0:ts:((length(f1)-1)*ts);
 
 % Smooth the signals
-if window
+if isnumeric(window) && ~isempty(window)
     p = smooth(p,window);
     f = smooth(f,window);
+elseif ~isempty(window)
+    p = filter(window,p);
+    f = filter(window,f);
 end
 
 % Decimate the signals

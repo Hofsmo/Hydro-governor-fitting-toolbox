@@ -24,7 +24,7 @@ models.lowest.fit = 0;
 for i = 1:size(NN,1)
     temp=arx(sys,NN(i,:),opt);
     [~,fit,~] = compare(sys,temp);
-    if fit > models.best.fit
+    if fit > models.best.fit || ~models.best.fit
         models.best.fit = fit;
         models.best.tf = temp;
         if isempty(models.lowest.tf)
