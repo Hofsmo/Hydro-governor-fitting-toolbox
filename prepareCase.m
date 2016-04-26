@@ -1,4 +1,4 @@
-function [p,f,t,ts] = prepareCase(filename, range, window, factor)
+function [sys] = prepareCase(filename, range, factor)
 % PREPARECASE prepare the case for the identification
 % A function that prepares the signal for the identification
 % INPUT:
@@ -7,19 +7,12 @@ function [p,f,t,ts] = prepareCase(filename, range, window, factor)
 %   window: The window size used for smoothing the signal
 %   factor: The factor used for decimation.
 % OUTPUT:
-%   p: The processed power
-%   f: The processed frequency
-%   t: The processed time
-%   ts: The time step
+%   sys: iddata object containing the system
 
 [f,p] = readPMU(filename);
 
-if nargin < 4
-    factor = 0;
-end
-
 if nargin < 3
-    window = [];
+    factor = 0;
 end
 
 if nargin < 2 || isempty(range)
@@ -36,21 +29,6 @@ f = -step(hDC3,f1);
 p = step(hDC3,p1);
 
 ts = 0.02;
-t=0:ts:((length(f1)-1)*ts);
+sys = resample(iddata(p,f,ts),1,factor);
 
-% Smooth the signals
-if isnumeric(window) && ~isempty(window)
-    p = smooth(p,window);
-    f = smooth(f,window);
-elseif ~isempty(window)
-    p = filter(window,p);
-    f = filter(window,f);
-end
-
-% Decimate the signals
-if factor
-    p = decimate(p,factor);
-    f = decimate(f,factor);
-    t = decimate(t,factor);
-    ts = t(2)-t(1);
 end

@@ -51,13 +51,10 @@ cases.complex3 = cases.complex2;
 Betha = -linspace(0,0.5,10);
 cases.complex3.complexPoles = complex(Betha/100,Betha);
 
+
 %% Case 10:Real3
 cases.real3 = cases.real2;
 cases.real3.realPoles = Betha;
-
-%% Case 14:compreal3
-cases.compReal3 = cases.real3;
-cases.compReal3.complexPoles = cases.complex3.complexPoles;
 
 %% Case 12:Real4
 cases.real4 = cases.real3;
@@ -68,23 +65,11 @@ cases.complex4 = cases.complex3;
 Betha = -linspace(0,0.1,10);
 cases.complex4.complexPoles = complex(Betha/100,Betha); 
 
+
+
 %% Case 15:compreal4
-cases.compReal4 = cases.complex4;
+cases.compReal4 = cases.compReal3;
 cases.compReal4.realPoles = cases.real4.realPoles;
-
-%% Case 9:Complex5
-cases.complex5 = cases.complex2;
-Betha = -linspace(0,0.05,10);
-cases.complex5.complexPoles = complex(Betha/100,Betha);
-
-%% Case 10:Real5
-cases.real5 = cases.real2;
-cases.real5.realPoles = Betha;
-
-%% Case 14:compreal5
-cases.compReal5 = cases.real3;
-cases.compReal5.complexPoles = cases.complex5.complexPoles;
-
 
 names = fieldnames (cases);
 

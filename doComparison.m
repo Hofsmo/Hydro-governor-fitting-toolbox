@@ -23,6 +23,7 @@ end
 if nargin < 4
     legends = 'show';
 end
+figure
 bode(results{:})
 legend(legends)
 grid on
