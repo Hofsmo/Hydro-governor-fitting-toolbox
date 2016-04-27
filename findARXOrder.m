@@ -22,14 +22,15 @@ models.lowest.tf = [];
 models.best.fit = 0;
 models.lowest.fit = 0;
 
-indicators = [NN(:,1:2),zeros(size(NN,1),3)];
+indicators = [NN(:,1:3),zeros(size(NN,1),4)];
 
 for i = 1:size(NN,1)
     temp=arx(sys,NN(i,:),opt);
-    indicators(i,3) = aic(temp);
-    indicators(i,4) = aic(temp,'BIC');
-    indicators(i,5) = temp.Report.fit.FPE;
+    indicators(i,4) = temp.Report.fit.AIC;
+    indicators(i,5) = temp.Report.fit.BIC;
+    indicators(i,6) = temp.Report.fit.FPE;
     [~,fit,~] = compare(sys,temp);
+    indicators(i,7) = fit;
     if fit > models.best.fit || ~models.best.fit
         models.best.fit = fit;
         models.best.tf = temp;

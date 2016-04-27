@@ -1,4 +1,4 @@
-function [sys] = prepareCase(filename, range, factor)
+function [sys,validation] = prepareCase(filename, range, factor)
 % PREPARECASE prepare the case for the identification
 % A function that prepares the signal for the identification
 % INPUT:
@@ -8,6 +8,7 @@ function [sys] = prepareCase(filename, range, factor)
 %   factor: The factor used for decimation.
 % OUTPUT:
 %   sys: iddata object containing the system
+%   validation: Data used for validation
 
 [f,p] = readPMU(filename);
 
@@ -30,5 +31,10 @@ p = step(hDC3,p1);
 
 ts = 0.02;
 sys = resample(iddata(p,f,ts),1,factor);
+
+if nargout == 2
+    sys=iddata(sys.OutputData(1:end/2),sys.InputData(1:end/2),sys.Ts);
+    validation=iddata(sys.OutputData(end/2+1:end),sys.InputData(end/2+1:end),sys.Ts);
+end
 
 end
