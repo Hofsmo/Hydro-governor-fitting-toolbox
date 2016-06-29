@@ -9,7 +9,7 @@
 %   res: struc containing the results
 
 % First read in the data
-sys = prepareCase(filename, [], 50);
+[sys1,sys2] = prepareCase(filename, [], 50);
 % Setting up the cases
 
 %% Case 1:Complex1
@@ -88,13 +88,14 @@ cases.compReal5.complexPoles = cases.complex5.complexPoles;
 
 names = fieldnames (cases);
 
-cases.sys = sys;
+cases.sys1 = sys1;
+cases.sys2 = sys2;
 
 %run the tests
 for i = 1:numel(names)
     % Run vectorfitting
-    res.(names{i}) = runVecFit(sys.InputData, sys.OutputData,...
-        sys.SamplingInstants, cases.(names{i}).complexPoles,...
+    res.(names{i}) = runVecFit(sys1.InputData, sys1.OutputData,...
+        sys1.SamplingInstants, cases.(names{i}).complexPoles,...
         cases.(names{i}).realPoles,1e-5);
 end
 
@@ -104,4 +105,4 @@ for i = 1:numel(names)
     cellRes{i} = res.(names{i}).fit;
 end
 
-cases.fit = doComparison(cases.sys,cellRes,[],names);
+cases.fit = doComparison(cases.sys2,cellRes,[],names);

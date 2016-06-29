@@ -33,8 +33,8 @@ ts = 0.02;
 sys = resample(iddata(p,f,ts),1,factor);
 
 if nargout == 2
-    sys=iddata(sys.OutputData(1:end/2),sys.InputData(1:end/2),sys.Ts);
-    validation=iddata(sys.OutputData(end/2+1:end),sys.InputData(end/2+1:end),sys.Ts);
+    sys=iddata(sys.OutputData(1:floor(end/2)),sys.InputData(1:floor(end/2)),sys.Ts);
+    validation=iddata(sys.OutputData(floor(end/2)+1:end),sys.InputData(floor(end/2)+1:end),sys.Ts);
 end
 
 end

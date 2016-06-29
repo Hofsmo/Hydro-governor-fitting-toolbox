@@ -1,4 +1,4 @@
-function [models, indicators] = findARXOrder(sys1,sys2,NN,tol,opt)
+function [models, indicators] = findARMAXOrder(sys1,sys2,NN,tol,opt)
 % FINDARXORDER function to find best ARX model order
 %
 % Input:
@@ -25,7 +25,7 @@ models.lowest.fit = 0;
 indicators = [NN(:,1:3),zeros(size(NN,1),4)];
 
 for i = 1:size(NN,1)
-    temp=arx(sys1,NN(i,:),opt);
+    temp=armax(sys1,NN(i,:),opt);
     indicators(i,4) = temp.Report.fit.AIC;
     indicators(i,5) = temp.Report.fit.BIC;
     indicators(i,6) = temp.Report.fit.FPE;
