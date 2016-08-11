@@ -96,7 +96,7 @@ for i = 1:numel(names)
     % Run vectorfitting
     res.(names{i}) = runVecFit(sys1.InputData, sys1.OutputData,...
         sys1.SamplingInstants, cases.(names{i}).complexPoles,...
-        cases.(names{i}).realPoles,1e-5);
+        cases.(names{i}).realPoles);
 end
 
 % I realized that it would be practical to use cells

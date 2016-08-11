@@ -30,11 +30,13 @@ f = -step(hDC3,f1);
 p = step(hDC3,p1);
 
 ts = 0.02;
-sys = resample(iddata(p,f,ts),1,factor);
+temp = resample(iddata(p,f,ts),1,factor);
 
 if nargout == 2
-    sys=iddata(sys.OutputData(1:floor(end/2)),sys.InputData(1:floor(end/2)),sys.Ts);
-    validation=iddata(sys.OutputData(floor(end/2)+1:end),sys.InputData(floor(end/2)+1:end),sys.Ts);
+    sys=iddata(temp.OutputData(1:floor(end/2)),temp.InputData(1:floor(end/2)),temp.Ts);
+    validation=iddata(temp.OutputData(floor(end/2)+1:end),temp.InputData(floor(end/2)+1:end),temp.Ts);
+else
+    sys = temp;
 end
 
 end

@@ -1,4 +1,4 @@
-    % Script to compare Thuc's paper with vector fitting
+% Script to compare Thuc's paper with vector fitting
 
 % First read in the data
 
