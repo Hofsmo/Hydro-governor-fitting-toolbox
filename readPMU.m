@@ -19,6 +19,7 @@ idx = zeros(1,6);
 labels = {'Frequency','Voltage A:Magnitude','Voltage A:Angle',...
     'Current A:Magnitude','Current A:Angle'};
 
+disp(filename)
 fid = fopen(filename);
 header = strsplit(fgets(fid),delimiter);
 for i = 2:numel(idx)
