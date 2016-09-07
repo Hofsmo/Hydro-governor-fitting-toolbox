@@ -9,7 +9,7 @@ function [cases, res] = compareStartingPoles(filename)
 %   res: struc containing the results
 
 % First read in the data
-[sys1] = prepareCase(filename, [], 50);
+[sys1, sys2] = prepareCase(filename, [], 50);
 % Setting up the cases
 
 %% Case 1:Complex1
@@ -87,9 +87,12 @@ cases.compReal5.complexPoles = cases.complex5.complexPoles;
 
 
 names = fieldnames (cases);
+sys2=sys1(451:900);
+sys2.Tstart = 1;
+sys1=sys1(1:450);
 
 cases.sys1 = sys1;
-%cases.sys2 = sys2;
+cases.sys2 = sys2;
 
 %run the tests
 for i = 1:numel(names)
@@ -105,4 +108,4 @@ for i = 1:numel(names)
     cellRes{i} = res.(names{i}).fit;
 end
 
-cases.fit = doComparison(cases.sys1,cellRes,[],names);
+cases.fit = doComparison(cases.sys2,cellRes,[],names);
