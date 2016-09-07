@@ -1,4 +1,4 @@
-function vf = runVecFit(x,y,t,complexPoles,realPoles,tol)
+    function vf = runVecFit(x,y,t,complexPoles,realPoles,tol)
 if nargin < 6
     tol =1e-5;
 end
