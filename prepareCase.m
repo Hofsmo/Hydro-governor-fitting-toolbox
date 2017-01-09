@@ -1,4 +1,4 @@
-function [sys,validation] = prepareCase(filename, range, factor)
+function [sys,validation] = prepareCase(filename, range, factor, PMU)
 % PREPARECASE prepare the case for the identification
 % A function that prepares the signal for the identification
 % INPUT:
@@ -6,17 +6,27 @@ function [sys,validation] = prepareCase(filename, range, factor)
 %   range: The range of values to use. The default is to use all
 %   window: The window size used for smoothing the signal
 %   factor: The factor used for decimation.
+%   PMU: Does the data come from a PMU? If it does calculate the power from
+%   voltage and current. If not assume that the power is already calculated
 % OUTPUT:
 %   sys: iddata object containing the system
 %   validation: Data used for validation
 
-[f,p] = readPMU(filename);
+if nargin < 4
+    PMU = true;
+end
+
+if PMU
+    [f,p] = readPMU(filename);
+else
+    [f,p] = readSimulation(filename);
+end
 
 if nargin < 3
     factor = 0;
 end
 
-if nargin < 2 || isempty(range)
+if nargin < 2 || isempty(range) || strcmp('all', range)
     f1 = f;
     p1 = p;
 else
