@@ -1,11 +1,12 @@
-function [sys,validation] = prepareCase(filename, range, factor, ts, PMU)
+function [data] = prepareCase(filename, range, factor, ts, PMU)
 % PREPARECASE prepare the case for the identification
 % A function that prepares the signal for the identification
 % INPUT:
 %   filename: Namme of the file containing the case
-%   range: The range of values to use. The default is to use all
+%   range: The range of values to use in seconds
 %   window: The window size used for smoothing the signal
 %   factor: The factor used for decimation.
+%   ts: sample rate
 %   PMU: Does the data come from a PMU? If it does calculate the power from
 %   voltage and current. If not assume that the power is already calculated
 % OUTPUT:
@@ -26,30 +27,28 @@ else
     [f,p] = readSimulation(filename);
 end
 
+if nargin < 4
+    ts = 0.02;
+end
+
 if nargin < 3
     factor = 0;
 end
 
-if nargin < 2 || isempty(range) || strcmp('all', range)
-    f1 = f;
-    p1 = p;
-else
-    f1 = f(range);
-    p1 = p(range);
+if numel(f)*ts < range * 2;
+    warning ('Chosen time window longer than half of dataset');
+    range = floor(numel(f)/2);
 end
 
-% Remove dc offset
-hDC3 = dsp.DCBlocker('Algorithm','Subtract mean');
-f = -step(hDC3,f1);
-p = step(hDC3,p1);
-
-temp = resample(iddata(p,f,ts),1,factor);
-
-if nargout == 2
-    sys=iddata(temp.OutputData(1:floor(end/2)),temp.InputData(1:floor(end/2)),temp.Ts);
-    validation=iddata(temp.OutputData(floor(end/2)+1:end),temp.InputData(floor(end/2)+1:end),temp.Ts);
+if nargin < 2 || isempty(range)
+    data = resample(detrend(iddata(p,f,ts)),1,factor);
 else
-    sys = temp;
-end
-
+    N = numel(f);
+    range=range/ts;
+    sets = floor(N/range);
+    data = cell(1,sets);
+    for i = 1:sets
+        idx = 1+(i-1)*range:i*range;
+        data{i} = resample(detrend(iddata(p(idx),f(idx),ts)),1,factor);
+    end
 end

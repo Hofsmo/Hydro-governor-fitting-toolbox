@@ -94,3 +94,4 @@ for i = 1:numel(names)
     doComparison(cases.(names{i}).td,{res.(names{i}).vf.fit,res.(names{i}).arx.fit},...
         names{i},{'VF','ARX'});
 end
+>>>>>>> 1cb4f20fb137e168867821e44f9de38632d90a1d
