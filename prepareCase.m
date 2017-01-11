@@ -1,4 +1,4 @@
-function [sys,validation] = prepareCase(filename, range, factor, PMU)
+function [sys,validation] = prepareCase(filename, range, factor, ts, PMU)
 % PREPARECASE prepare the case for the identification
 % A function that prepares the signal for the identification
 % INPUT:
@@ -13,6 +13,10 @@ function [sys,validation] = prepareCase(filename, range, factor, PMU)
 %   validation: Data used for validation
 
 if nargin < 4
+    ts = 0.02;
+end
+
+if nargin < 5
     PMU = true;
 end
 
@@ -39,7 +43,6 @@ hDC3 = dsp.DCBlocker('Algorithm','Subtract mean');
 f = -step(hDC3,f1);
 p = step(hDC3,p1);
 
-ts = 0.02;
 temp = resample(iddata(p,f,ts),1,factor);
 
 if nargout == 2
