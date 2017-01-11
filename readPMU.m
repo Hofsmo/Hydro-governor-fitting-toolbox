@@ -1,4 +1,4 @@
-function [f,P,U,I] = readPMU(filename, delimiter)
+function [f,P,Q,U,I] = readPMU(filename, delimiter)
 % READPMU reads and processes PMU data
 %
 % INPUT:
@@ -19,7 +19,6 @@ idx = zeros(1,6);
 labels = {'Frequency','Voltage A:Magnitude','Voltage A:Angle',...
     'Current A:Magnitude','Current A:Angle'};
 
-disp(filename)
 fid = fopen(filename);
 header = strsplit(fgets(fid),delimiter);
 for i = 2:numel(idx)
@@ -40,4 +39,5 @@ f = data(:,idx(1));
 U = data(:,idx(2)).*(cos(data(:,idx(3))*pi/180) +1i*sin(data(:,idx(3))*pi/180));
 I = -data(:,idx(4)).*(cos(data(:,idx(5))*pi/180) +1i*sin(data(:,idx(5))*pi/180));
 P = real (U.*conj(I))*3/10^6;
+Q = imag(U.*conj(I))*3/10^6;
 P = P(~isnan(P));
