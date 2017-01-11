@@ -1,19 +1,19 @@
 function res = identifyPartitioned(filename, range, ts, factor, method, opt)
 
-if nargin < 4
+if nargin < 5
     method = 'VF';
    if nargin < 6
-       opt.realPoles = -linspace(0,1,10);
+       opt.realPoles = -2*linspace(0,0.05,10);
        Beta = opt.realPoles;
        opt.complexPoles = complex(Beta/100, Beta);
    end
 end
 
-if nargin < 4
+if nargin < 3
     ts = 0.02;
 end
 
-if nargin < 5
+if nargin < 4
     factor = 50;
 end
 
@@ -25,8 +25,8 @@ pairs = [pairs;fliplr(pairs)];
 res.sys = sys;
 res.pairs = pairs;
 res.model = cell(1,size(pairs,1));
-res.ident(size(pairs,1)).idx_i = pairs(end,1);
 res.NRMSE = zeros(1,size(pairs,1));
+
 
 for i = 1:size(pairs,1)
 
@@ -36,5 +36,12 @@ for i = 1:size(pairs,1)
             opt.complexPoles, opt.realPoles);
         [~,res.NRMSE(i),~] = compare(sys{pairs(i,2)}, res.model{i}.fit);
     end
+    if strcmp(method, 'ARX')
+        arxopt = arxOptions('Focus', 'stability');
+        V = arxstruc(sys{pairs(i,1)},sys{pairs(i,2)},opt.NN); % Test all the orders
+        order = selstruc(V,0); % Select the best order
+        res.model{i} = arx(sys{pairs(i,1)},order,arxopt); % Do the fitting
+        [~,res.NRMSE(i),~] = compare(sys{pairs(i,2)}, res.model{i});
+    end 
 end
         

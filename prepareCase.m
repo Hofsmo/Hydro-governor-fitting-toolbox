@@ -20,6 +20,10 @@ end
 if nargin < 3
     factor = 0;
 end
+if numel(f)*ts < range * 2;
+    warning ('Chosen time window longer than half of dataset');
+    range = floor(numel(f)/2);
+end
 
 if nargin < 2 || isempty(range)
     data = resample(detrend(iddata(p,f,ts)),1,factor);
