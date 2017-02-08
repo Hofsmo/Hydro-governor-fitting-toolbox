@@ -1,4 +1,4 @@
-function [data] = prepareCase(filename, range, factor, ts, PMU)
+function [data] = prepareCase(f, p, range, factor, ts)
 % PREPARECASE prepare the case for the identification
 % A function that prepares the signal for the identification
 % INPUT:
@@ -13,39 +13,26 @@ function [data] = prepareCase(filename, range, factor, ts, PMU)
 %   sys: iddata object containing the system
 %   validation: Data used for validation
 
-if nargin < 4
-    ts = 0.02;
-end
-
 if nargin < 5
-    PMU = true;
-end
-
-if PMU
-    [f,p] = readPMU(filename);
-else
-    [f,p] = readSimulation(filename);
-end
-
-if nargin < 4
     ts = 0.02;
 end
 
-if nargin < 3
+if nargin < 4
     factor = 0;
-end
-
-if numel(f)*ts < range * 2;
-    warning ('Chosen time window longer than half of dataset');
-    range = floor(numel(f)/2);
 end
 
 if nargin < 2 || isempty(range)
     data = resample(detrend(iddata(p,f,ts)),1,factor);
-else
-    N = numel(f);
-    range=range/ts;
-    sets = floor(N/range);
+else     
+    if numel(f)*ts < range * 2;
+        warning ('Chosen time window longer than half of dataset');
+        sets = 1;
+        range=range/ts;
+    else
+          range=range/ts;
+          N = numel(f);  
+          sets = floor(N/range);
+    end
     data = cell(1,sets);
     for i = 1:sets
         idx = 1+(i-1)*range:i*range;
