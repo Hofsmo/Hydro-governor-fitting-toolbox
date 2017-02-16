@@ -21,11 +21,13 @@ for i=1:size(names,1)
     gen(i).snaps(size(names,1)).models = [];
     for j = 1:size(snaps,1)
         gen(i).snaps(j).name=snaps(j,:);
-            [sys1,sys2] = prepareCase(snaps(j,:), [], 50);
+        [f, p] = readPMU(snaps(j,:));
+        [data] = prepareCase(f, p, 1800, 50);
+            
         NN = struc(1:30,1:30,0);
-        opt = arxOptions('Focus', 'stability');
+        opt = arxOptions('Focus', 'simulation');
         [gen(i).snaps(j).models,gen(i).snaps(j).indicators]...
-            = findARXOrder(sys1,sys2,NN,2,opt);
+            = findARXOrder(data{1},data{2},NN,2,opt);
     end
     cd ('..')
 end

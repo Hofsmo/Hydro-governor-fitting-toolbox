@@ -22,7 +22,7 @@ models.lowest.tf = [];
 models.best.fit = 0;
 models.lowest.fit = 0;
 
-indicators = [NN(:,1:3),zeros(size(NN,1),4)];
+indicators = [NN(:,1:3),zeros(size(NN,1),6)];
 
 for i = 1:size(NN,1)
     temp=arx(sys1,NN(i,:),opt);
@@ -31,6 +31,10 @@ for i = 1:size(NN,1)
     indicators(i,6) = temp.Report.fit.FPE;
     [~,fit,~] = compare(sys2,temp);
     indicators(i,7) = fit;
+    [vaf_pred, vaf_sim] = variance_accounted_for(temp, sys2);
+    indicators(i,8) = vaf_pred;
+    indicators(i,9) = vaf_sim;
+    
     if fit > models.best.fit || ~models.best.fit
         models.best.fit = fit;
         models.best.tf = temp;
