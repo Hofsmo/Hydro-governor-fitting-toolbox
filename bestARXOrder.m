@@ -1,6 +1,5 @@
 % Script that finds the best ARX order for all generators at different
 % times
-
 tmp = ls();
 names = tmp(3:end,:);
 % Create struct for storing stuff
@@ -22,7 +21,7 @@ for i=1:size(names,1)
     for j = 1:size(snaps,1)
         gen(i).snaps(j).name=snaps(j,:);
         [f, p] = readPMU(snaps(j,:));
-        [data] = prepareCase(f, p, 1800, 50);
+        [data] = prepareCase(f, p, 300, 50);
             
         NN = struc(1:30,1:30,0);
         opt = arxOptions('Focus', 'simulation');
@@ -31,3 +30,4 @@ for i=1:size(names,1)
     end
     cd ('..')
 end
+save arx_300s
