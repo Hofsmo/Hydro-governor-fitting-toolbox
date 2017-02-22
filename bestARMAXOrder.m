@@ -1,7 +1,7 @@
-% Script that finds the best ARMAXX order for all generators at different
+% Script that finds the best ARMAX order for all generators at different
 % times
 
-tmp = ls();
+tmp = dir();
 names = tmp(3:end,:);
 % Create struct for storing stuff
 gen = struct('name',[],'snaps',[]);
@@ -13,20 +13,22 @@ h = waitbar(0,'Initializing waitbar...');
 N = size(names,1);
 for i=1:size(names,1)
     waitbar(i/N,h,sprintf('%d%%',floor(i/N*100)))
-    cd (names(i,:))   
-    gen(i).name = names(i,:);
-    tmp = ls ();
+    cd (names(i).name)   
+    gen(i).name = names(i).name;
+    tmp = dir();
     snaps = tmp(3:end,:);
     gen(i).snaps = struct('name',[],'models',[],'indicators', []);
     gen(i).snaps(size(names,1)).models = [];
     for j = 1:size(snaps,1)
-        gen(i).snaps(j).name=snaps(j,:);
-            [sys1,sys2] = prepareCase(snaps(j,:), [], 50);
-        NN = [struc(1:16,1:16,1:16),zeros(16^3,1)];
+        gen(i).snaps(j).name=snaps(j).name;
+        [f, p] = readPMU(snaps(j).name);
+        [data] = prepareCase(f, p, 1200, 50);
+        NN = [struc(1:10,1:10,1:10),zeros(10^3,1)];
         
-        opt = armaxOptions('Focus', 'stability');
+        opt = armaxOptions('Focus', 'simulation');
         [gen(i).snaps(j).models,gen(i).snaps(j).indicators]...
-            = findARMAXOrder(sys1,sys2,NN,2,opt);
+            = findARMAXOrder(data{1},data{2},NN,2,opt);
     end
     cd ('..')
 end
+save ARMAXOrder_1200.m
