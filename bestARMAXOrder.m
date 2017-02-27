@@ -22,7 +22,7 @@ for i=1:size(names,1)
     for j = 1:size(snaps,1)
         gen(i).snaps(j).name=snaps(j).name;
         [f, p] = readPMU(snaps(j).name);
-        [data] = prepareCase(f, p, 1200, 50);
+        [data] = prepareCase(f, p, 300, 50);
         NN = [struc(1:10,1:10,1:10),zeros(10^3,1)];
         
         opt = armaxOptions('Focus', 'simulation');
@@ -31,4 +31,4 @@ for i=1:size(names,1)
     end
     cd ('..')
 end
-save ARMAXOrder_1200.m
+save ARMAXOrder_300.m
