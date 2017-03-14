@@ -29,4 +29,4 @@ bar(best)
 legend('AIC','BIC','FPE','NRMSE','VAF', 'VAF_{SIM}')
 grid on
 cleanfigure
-matlab2tikz('ARMAXorders_300.tikz')
+matlab2tikz('ARXorders_1800.tikz')

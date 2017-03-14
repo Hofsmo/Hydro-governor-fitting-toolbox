@@ -1,7 +1,7 @@
 % Script that finds the best ARX order for all generators at different
 % times
-order=5;
-range=300;
+order=15;
+range=1800;
 tmp = ls();
 names = tmp(3:end,:);
 % Create struct for storing stuff
@@ -32,4 +32,4 @@ for i=1:size(names,1)
     end
     cd ('..')
 end
-save arx_300s
+save arx_1800s
