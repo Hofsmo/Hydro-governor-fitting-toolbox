@@ -1,4 +1,7 @@
-function J = droop_jacobian(A,B)
+function J = droop_jacobian(model)
+
+A = model.A(2:end);
+B = model.B;
 
 a_g = 1/sum(B);
 b_g = -sum(A)*a_g^2;

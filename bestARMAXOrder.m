@@ -1,20 +1,19 @@
 % Script that finds the best ARMAX order for all generators at different
 % times
 order = 5;
-ranges = [300, 600, 900, 1200, 1800, 3600];
-
-tmp = dir();
-names = tmp(3:end,:);
-% Create struct for storing stuff
-gen = struct('name',[],'snaps',[]);
-% Initialize struct array
-gen(size(names,1)).name = names(end,:);
-
-% Run through all the generators
-N = size(names,1);
+ranges = [300, 600, 900, 1200, 1800];
 for k = 1:numel(ranges)
+    tmp = dir();
+    names = tmp(3:end,:);
+    % Create struct for storing stuff
+    gen = struct('name',[],'snaps',[]);
+    % Initialize struct array
+    gen(size(names,1)).name = names(end,:);
+
     h = waitbar(0,'Initializing waitbar...');
-    for i=1:size(names,1)
+    % Run through all the generators
+    N = size(names,1);
+    for i=1:N
         waitbar(i/N,h,sprintf('%d%%',floor(i/N*100)))
         cd (names(i).name)   
         gen(i).name = names(i).name;
@@ -26,7 +25,7 @@ for k = 1:numel(ranges)
             gen(i).snaps(j).name=snaps(j).name;
             [f, p] = readPMU(snaps(j).name);
             [data] = prepareCase(f, p, ranges(k), 50);
-            NN = [struc(1:order,1:order,1:order),zeros(N^3,1)];
+            NN = [struc(1:order,1:order,1:order),zeros(order^3,1)];
 
             opt = armaxOptions('Focus', 'simulation');
             [gen(i).snaps(j).models,gen(i).snaps(j).indicators]...
@@ -35,5 +34,5 @@ for k = 1:numel(ranges)
         cd ('..')
     end
     close(h)
-    save(sprintf('../Transactions_results/ARMAXOrder_results_%d.m', ranges(k)))
+    save (sprintf('../Transactions_results/ARMAXOrder_%d.mat', ranges(k)));
 end

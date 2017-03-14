@@ -1,7 +1,12 @@
 % Script that finds the best ARX order for all generators at different
 % times
+<<<<<<< HEAD
 order=5;
 ranges = [300, 600, 900, 1200, 1800];
+=======
+order=15;
+range=1800;
+>>>>>>> 835b31c65e5cf24472813f26ece2e1c188e3263a
 tmp = ls();
 names = tmp(3:end,:);
 % Create struct for storing stuff
@@ -33,6 +38,12 @@ for k=1:numel(ranges)
         end
         cd ('..')
     end
+<<<<<<< HEAD
     close(h)
     save(sprintf('../Transactions_results/ARXOrder_results_%d.m', ranges(k)))
 end
+=======
+    cd ('..')
+end
+save arx_1800s
+>>>>>>> 835b31c65e5cf24472813f26ece2e1c188e3263a
