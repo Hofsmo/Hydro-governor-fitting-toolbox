@@ -10,11 +10,11 @@ function [models, indicators] = findARXOrder(sys1,sys2,NN,tol,opt)
 %   the lowest order within the tolerance limit
 %   inditcators: Information criterion indicators.
 
-if nargin < 3
+if nargin < 4
     tol = 1;
 end
-if nargin < 4
-    opt = arxOptions('Focus','stability');
+if nargin < 5
+    opt = arxOptions('Focus','prediction');
 end
 
 models.best.tf = [];

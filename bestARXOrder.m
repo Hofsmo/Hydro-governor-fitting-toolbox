@@ -1,6 +1,6 @@
 % Script that finds the best ARX order for all generators at different
 % times
-order=5;
+order=10;
 range=300;
 tmp = ls();
 names = tmp(3:end,:);
@@ -26,7 +26,7 @@ for i=1:size(names,1)
         [data] = prepareCase(f, p, range, 50);
             
         NN = struc(1:order,1:order,0);
-        opt = arxOptions('Focus', 'simulation');
+        opt = arxOptions('Focus', 'prediction');
         [gen(i).snaps(j).models,gen(i).snaps(j).indicators]...
             = findARXOrder(data{1},data{2},NN,2,opt);
     end
