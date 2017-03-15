@@ -34,6 +34,7 @@ for i = 1:size(NN,1)
     [vaf_pred, vaf_sim] = variance_accounted_for(temp, sys2);
     indicators(i,8) = vaf_pred;
     indicators(i,9) = vaf_sim;
+    fit = vaf_pred;
     
     if fit > models.best.fit || ~models.best.fit
         models.best.fit = fit;

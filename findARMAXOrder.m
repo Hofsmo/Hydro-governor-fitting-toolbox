@@ -10,11 +10,11 @@ function [models, indicators] = findARMAXOrder(sys1,sys2,NN,tol,opt)
 %   the lowest order within the tolerance limit
 %   inditcators: Information criterion indicators.
 
-if nargin < 3
+if nargin < 4
     tol = 1;
 end
-if nargin < 4
-    opt = arxOptions('Focus','stability');
+if nargin < 5
+    opt = arxOptions('Focus','prediction');
 end
 
 models.best.tf = [];
@@ -34,6 +34,7 @@ for i = 1:size(NN,1)
     [vaf_pred, vaf_sim] = variance_accounted_for(temp, sys2);
     indicators(i,8) = vaf_pred;
     indicators(i,9) = vaf_sim;
+    fit = vaf_pred;
     if fit > models.best.fit || ~models.best.fit
         models.best.fit = fit;
         models.best.tf = temp;
