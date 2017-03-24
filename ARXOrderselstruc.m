@@ -1,7 +1,7 @@
 % Script that finds the best ARX order for all generators at different
 % times
 order=5;
-ranges = [300, 600, 900, 1200, 1800];
+ranges = [300, 600, 900, 1200];
 tmp = ls();
 names = tmp(3:end,:);
 % Create struct for storing stuff
@@ -27,12 +27,14 @@ for k=1:numel(ranges)
             [data] = prepareCase(f, p, ranges(k), 50);
 
             NN = struc(1:order,1:order,0);
-            opt = arxOptions('Focus', 'simulation');
-            [gen(i).snaps(j).models,gen(i).snaps(j).indicators]...
-                = findARXOrder(data{1},data{2},NN,2,opt);
+            opt = arxOptions('Focus', 'prediction');
+            V = arxstruc(data{1}, data{2}, NN);
+            [nn, vmod] = selstruc(V, 'aic');
+            gen(i).snaps(j).model = arx(data{1}, nn, opt);
+            [gen(1).snaps(j).NRMSE, gen(1).snaps(j).NRMSE_sim] = variance_accounted_for(data{2}, data{1});
         end
         cd ('..')
     end
     close(h)
-    save(sprintf('../Transactions_results/ARXOrder_results_%d.m', ranges(k)))
+    save(sprintf('../Transactions_results/ARXOrder_selstruc_%d.m', ranges(k)))
 end
