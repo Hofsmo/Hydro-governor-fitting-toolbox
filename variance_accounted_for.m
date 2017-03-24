@@ -8,13 +8,13 @@ function [vaf_pred, vaf_sim] = variance_accounted_for(model, data)
 %       vaf_sim: Variance accounted for using simulated data
 
     y = data.OutputData;
-    y_2 = norm(y)^2;
+    y_2 = norm(y);
     
     y_sim= compare(data, model);
-    vaf_sim = max([0, (1 - norm(y-y_sim.OutputData)^2/y_2)*100]);
+    vaf_sim = max([0, (1 - norm(y-y_sim.OutputData)/y_2)*100]);
     
     y_pred = predict(model, data, 1);
-    vaf_pred = max([0, (1 - norm(y-y_pred.OutputData)^2/y_2)*100]);
+    vaf_pred = max([0, (1 - norm(y-y_pred.OutputData)/y_2)*100]);
 
 end
 

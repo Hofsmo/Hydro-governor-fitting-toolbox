@@ -2,7 +2,7 @@
 N = 10;
 best = zeros(N,6);
 
-for i = 1:numel(gen)
+for i = 1:3
     N = numel(gen(i).snaps);
     j = 1;
     while j<=N && ~isempty(gen(i).snaps(j).indicators)
@@ -29,4 +29,4 @@ bar(best)
 legend('AIC','BIC','FPE','NRMSE','VAF', 'VAF_{SIM}')
 grid on
 cleanfigure
-matlab2tikz('ARXorders_1800.tikz')
+matlab2tikz('ARXOrders_1200.tikz')
