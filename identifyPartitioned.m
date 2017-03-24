@@ -16,8 +16,8 @@ end
 if nargin < 4
     factor = 50;
 end
-
-sys = prepareCase(filename,range,factor,ts);
+[f, p] = readPMU(filename);
+sys = prepareCase(f, p, range, factor, ts);
 
 N = numel(sys);
 pairs=nchoosek(1:N,2);
@@ -26,7 +26,8 @@ res.sys = sys;
 res.pairs = pairs;
 res.model = cell(1,size(pairs,1));
 res.NRMSE = zeros(1,size(pairs,1));
-
+res.best.pair = [];
+res.best.model = [];
 
 for i = 1:size(pairs,1)
 
@@ -37,11 +38,17 @@ for i = 1:size(pairs,1)
         [~,res.NRMSE(i),~] = compare(sys{pairs(i,2)}, res.model{i}.fit);
     end
     if strcmp(method, 'ARX')
-        arxopt = arxOptions('Focus', 'stability');
+        arxopt = arxOptions('Focus', 'prediction');
         V = arxstruc(sys{pairs(i,1)},sys{pairs(i,2)},opt.NN); % Test all the orders
         order = selstruc(V,0); % Select the best order
         res.model{i} = arx(sys{pairs(i,1)},order,arxopt); % Do the fitting
-        [~,res.NRMSE(i),~] = compare(sys{pairs(i,2)}, res.model{i});
+        
+        %[~,res.NRMSE(i),~] = compare(sys{pairs(i,2)}, res.model{i});
+        if isempty(best.model)
+            res.best.model = res.model{i};
+            res.best.model.pari = i;
+            
+            
     end 
 end
         
