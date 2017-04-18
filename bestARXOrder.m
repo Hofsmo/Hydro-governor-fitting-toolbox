@@ -1,7 +1,7 @@
 % Script that finds the best ARX order for all generators at different
 % times
-order = 10;
-ranges = [300, 600, 900, 1200, 1800];
+order = 5;
+ranges = [300, 600, 900, 1200];
 
 for k = 1:numel(ranges)
     tmp = dir();
