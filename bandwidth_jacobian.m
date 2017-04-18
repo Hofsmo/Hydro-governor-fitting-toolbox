@@ -9,7 +9,7 @@ P = [model.A(2:end), model.B];
 na = numel(model.A);
 
 % Calulate the bandwidth of the model
-bw = bandwidth(model);
+bw = bandwidth(model)/(2*pi);
 
 jacobian = zeros(1,numel(P));
 
@@ -29,5 +29,5 @@ for i = 2:size(jacobian, 2)
     
     temp = model; 
     temp.(tmp_str)(k) = temp.(tmp_str)(k) + h(i);
-    jacobian(k) = (bandwidth(temp)-bw)/h(i);
+    jacobian(k) = (bandwidth(temp)/(2*pi)-bw)/h(i);
 end
