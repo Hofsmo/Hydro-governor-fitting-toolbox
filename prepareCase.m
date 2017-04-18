@@ -24,7 +24,7 @@ end
 if nargin < 2 || isempty(range)
     data = resample(detrend(iddata(p,f,ts)),1,factor);
 else     
-    if numel(f)*ts < range * 2;
+    if numel(f)*ts < range * 2
         warning ('Chosen time window longer than half of dataset');
         sets = 1;
         range=range/ts;
