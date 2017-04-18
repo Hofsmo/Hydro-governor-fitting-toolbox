@@ -1,9 +1,7 @@
 % Script that finds the best ARMAX order for all generators at different
 % times
 order = 5;
-ranges = [300, 600, 900, 1200, 1800];
-
-
+ranges = [600, 900, 1200, 1800];
 for k = 1:numel(ranges)
     tmp = dir();
     names = tmp(3:end,:);
@@ -29,7 +27,7 @@ for k = 1:numel(ranges)
             [data] = prepareCase(f, p, ranges(k), 50);
             NN = [struc(1:order,1:order,1:order),zeros(order^3,1)];
 
-            opt = armaxOptions('Focus', 'simulation');
+            opt = armaxOptions('Focus', 'prediction');
             [gen(i).snaps(j).models,gen(i).snaps(j).indicators]...
                 = findARMAXOrder(data{1},data{2},NN,2,opt);
         end
